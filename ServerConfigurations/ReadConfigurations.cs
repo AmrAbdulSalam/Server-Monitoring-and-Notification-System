@@ -1,7 +1,6 @@
 ﻿using System.Text.Json;
-using ServerStatisticsService.Configurations;
 
-namespace ServerStatisticsService
+namespace Configurations
 {
     public static class ReadConfigurations
     {

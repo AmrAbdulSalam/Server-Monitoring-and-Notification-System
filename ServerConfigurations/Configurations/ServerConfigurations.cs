@@ -1,5 +1,5 @@
 ﻿
-namespace ServerStatisticsService.Configurations
+namespace Configurations
 {
     public class ServerConfigurations
     {
