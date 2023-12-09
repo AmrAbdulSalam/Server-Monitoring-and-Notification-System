@@ -19,7 +19,7 @@ namespace ServerStatisticsConsumer
 
             var mongoConnectionString = ReadConfigurations.Configurations.MongoConnection.ConnectionString;
             var mongoDatabase = ReadConfigurations.Configurations.MongoConnection.Database;
-            var mongoCollection = ReadConfigurations.Configurations.MongoConnection.Collection; 
+            var mongoCollection = ReadConfigurations.Configurations.MongoConnection.Collection;
 
             var mongoDB = new MongoDBService(mongoConnectionString , mongoDatabase , mongoCollection);
 
