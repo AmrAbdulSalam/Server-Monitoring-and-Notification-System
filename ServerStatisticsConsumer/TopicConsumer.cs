@@ -2,13 +2,14 @@
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using ServerStatisticsConsumer.Services;
 using ServerStatisticsService;
 
 namespace ServerStatisticsConsumer
 {
     public static class TopicConsumer
     {
-        public static void Consume(IModel channel)
+        public static async Task Consume(IModel channel , IMongoDB mongoDB)
         {
             channel.ExchangeDeclare("topic-ServerStatistics-exchange", ExchangeType.Topic);
             channel.QueueDeclare("topic-ServerStatistics-queue",
@@ -20,7 +21,7 @@ namespace ServerStatisticsConsumer
             channel.QueueBind("topic-ServerStatistics-queue", "topic-ServerStatistics-exchange", "ServerStatistics.*");
 
             var consumer = new EventingBasicConsumer(channel);
-            consumer.Received += (sender, e) =>
+            consumer.Received += async (sender, e) =>
             {
                 var body = e.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
@@ -33,7 +34,8 @@ namespace ServerStatisticsConsumer
                     CpuUsage = serverStatDto.CpuUsage,
                     Timestamp = serverStatDto.Timestamp
                 };
-                Console.WriteLine(serverStat);
+
+                await mongoDB.Insert(serverStat);
             };
             channel.BasicConsume("topic-ServerStatistics-queue", true, consumer);
             Console.WriteLine("Consumer Started");

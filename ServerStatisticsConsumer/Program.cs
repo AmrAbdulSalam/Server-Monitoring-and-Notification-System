@@ -1,10 +1,12 @@
 ﻿using RabbitMQ.Client;
+using ServerStatisticsConsumer.Services;
+using Configurations;
 
 namespace ServerStatisticsConsumer
 {
     public class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             var factory = new ConnectionFactory
             {
@@ -12,8 +14,16 @@ namespace ServerStatisticsConsumer
             };
             using var connection = factory.CreateConnection();
             using var channel = connection.CreateModel();
+            string? path = @"D:\intership\ServerMonitoringAndNotificationSystem\appsettings.json";
+            await ReadConfigurations.ReadSettingsFile(path);
 
-            TopicConsumer.Consume(channel);
+            var mongoConnectionString = ReadConfigurations.Configurations.MongoConnection.ConnectionString;
+            var mongoDatabase = ReadConfigurations.Configurations.MongoConnection.Database;
+            var mongoCollection = ReadConfigurations.Configurations.MongoConnection.Collection; 
+
+            var mongoDB = new MongoDBService(mongoConnectionString , mongoDatabase , mongoCollection);
+
+            await TopicConsumer.Consume(channel , mongoDB);
         }
     }
 }
