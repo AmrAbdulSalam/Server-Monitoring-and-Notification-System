@@ -1,6 +1,7 @@
 ﻿using RabbitMQ.Client;
 using ServerStatisticsConsumer.Services;
 using Configurations;
+using SignalRService;
 
 namespace ServerStatisticsConsumer
 {
@@ -22,8 +23,11 @@ namespace ServerStatisticsConsumer
             var mongoCollection = ReadConfigurations.Configurations.MongoConnection.Collection;
 
             var mongoDB = new MongoDBService(mongoConnectionString , mongoDatabase , mongoCollection);
+            var serverAlertService = new ServerAlertService(ReadConfigurations.Configurations.SignalRConfig.SignalRUrl);
 
-            await TopicConsumer.Consume(channel , mongoDB);
+            await TopicConsumer.Consume(channel , mongoDB
+                , ReadConfigurations.Configurations.AnomalyDetectionConfig
+                , serverAlertService);
         }
     }
 }
