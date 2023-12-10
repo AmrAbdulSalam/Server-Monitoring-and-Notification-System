@@ -16,7 +16,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerConfigurations", "Ser
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerStatisticsConsumer", "ServerStatisticsConsumer\ServerStatisticsConsumer.csproj", "{9C7A1ECF-08D8-4034-B93A-210A11A79A29}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalRService", "SignalRService\SignalRService.csproj", "{4D00DA35-6B79-4086-AF48-E5F8E6EA7503}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SignalRService", "SignalRService\SignalRService.csproj", "{4D00DA35-6B79-4086-AF48-E5F8E6EA7503}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventsRecevierService", "EventsRecevierService\EventsRecevierService.csproj", "{93D28B88-07E7-49D7-8B72-A34977E51B02}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,6 +46,10 @@ Global
 		{4D00DA35-6B79-4086-AF48-E5F8E6EA7503}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D00DA35-6B79-4086-AF48-E5F8E6EA7503}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D00DA35-6B79-4086-AF48-E5F8E6EA7503}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93D28B88-07E7-49D7-8B72-A34977E51B02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93D28B88-07E7-49D7-8B72-A34977E51B02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93D28B88-07E7-49D7-8B72-A34977E51B02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93D28B88-07E7-49D7-8B72-A34977E51B02}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
