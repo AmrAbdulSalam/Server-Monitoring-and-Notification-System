@@ -1,6 +1,6 @@
 ﻿namespace SignalRService
 {
-    public interface IServerAlertService
+    public interface IServerAlertSenderService
     {
         public Task SendAlert(string alert);
     }

@@ -8,5 +8,6 @@ namespace Configurations
         public MongoConnection? MongoConnection { get; set; }
         public AnomalyDetectionConfig? AnomalyDetectionConfig { get; set; }
         public SignalRConfig? SignalRConfig { get; set; }
+        public RabbitMQConfig? RabbitMQConfig { get; set; }
     }
 }

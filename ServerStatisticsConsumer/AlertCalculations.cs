@@ -9,8 +9,8 @@ namespace ServerStatisticsConsumer
         private readonly AnomalyDetectionConfig _config;
         private ServerStatisticsDTO _serverStat;
         private ServerStatisticsDTO _prevServerSta = null;
-        private ServerAlertService _serverAlertService;
-        public AlertCalculations(AnomalyDetectionConfig config  , ServerAlertService serverAlertService)
+        private ServerAlertSenderService _serverAlertService;
+        public AlertCalculations(AnomalyDetectionConfig config  , ServerAlertSenderService serverAlertService)
         {
             _config = config;
             _serverAlertService = serverAlertService;

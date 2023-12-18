@@ -1,34 +1,32 @@
 ﻿using System.Text;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
-using Configurations;
 using ServerStatisticsService;
+using ServerConfigurations.Configurations;
 
 namespace ServerStatisticsPublisher
 {
-    public static class TopicPublisher
+    public class TopicPublisher : ITopicPublisher
     {
-        public static async Task Publish(IModel channel)
+        private readonly IModel _channel;
+        private readonly RabbitMQConfig _config;
+
+        public TopicPublisher(IModel channel , RabbitMQConfig config)
         {
-            channel.ExchangeDeclare("topic-ServerStatistics-exchange" , ExchangeType.Topic);
-            string? path = @"D:\intership\ServerMonitoringAndNotificationSystem\appsettings.json";
+            _channel = channel;
+            _config = config;
+        }
 
-            while (true)
-            {
-                await ReadConfigurations.ReadSettingsFile(path);
+        public void Publish(ServerStatisticsDTO message , string serverIdentifier)
+        {
+            _channel.ExchangeDeclare(_config.Exchange, ExchangeType.Topic);
 
-                var systemDiagnostic = new SystemDiagnostic();
-                var message = systemDiagnostic.UpdateServerInfo();
+            var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
 
-                var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
-  
-                var serverIdentifier = ReadConfigurations.Configurations.ServerStatisticsConfig.ServerIdentifier;
-                var samplingIntervalSeconds = ReadConfigurations.Configurations.ServerStatisticsConfig.SamplingIntervalSeconds*1000;
+            Console.WriteLine(message.ToString());
 
-                Console.WriteLine(message.ToString());
-                channel.BasicPublish("topic-ServerStatistics-exchange", $"ServerStatistics.{serverIdentifier}", null, body);
-                Thread.Sleep(samplingIntervalSeconds);
-            }
+            _channel.BasicPublish(_config.Exchange, $"ServerStatistics.{serverIdentifier}", null, body);
+
         }
     }
 }

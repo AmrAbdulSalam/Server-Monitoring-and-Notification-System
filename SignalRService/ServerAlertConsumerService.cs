@@ -2,7 +2,7 @@
 
 namespace SignalRService
 {
-    public class ServerAlertConsumerService
+    public class ServerAlertConsumerService : IServerAlertConsumerService
     {
         private readonly HubConnection _hubConnection;
 

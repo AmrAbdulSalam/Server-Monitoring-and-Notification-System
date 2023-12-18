@@ -5,27 +5,38 @@ using RabbitMQ.Client.Events;
 using ServerConfigurations.Configurations;
 using ServerStatisticsConsumer.Services;
 using ServerStatisticsService;
-using SignalRService;
 
 namespace ServerStatisticsConsumer
 {
-    public static class TopicConsumer
+    public class TopicConsumer : ITopicConsumer
     {
-        public static async Task Consume(IModel channel , IMongoDB mongoDB 
-            , AnomalyDetectionConfig configThreshold , ServerAlertService serverAlertService)
+        private readonly IModel _channel;
+        private readonly IMongoDB _mongoDB;
+        private readonly RabbitMQConfig _config;
+        private readonly AlertCalculations _alertCalculation;
+
+        public TopicConsumer(IModel channel, IMongoDB mongoDB, RabbitMQConfig config , AlertCalculations alertCalculation)
         {
-            channel.ExchangeDeclare("topic-ServerStatistics-exchange", ExchangeType.Topic);
-            channel.QueueDeclare("topic-ServerStatistics-queue",
+            _channel = channel;
+            _mongoDB = mongoDB;
+            _config = config;
+            _alertCalculation = alertCalculation;
+        }
+
+        public async Task Consume()
+        {
+            _channel.ExchangeDeclare(_config.Exchange, ExchangeType.Topic);
+
+            _channel.QueueDeclare(_config.Queue,
                durable: true,
                exclusive: false,
             autoDelete: false,
             arguments: null);
 
-            channel.QueueBind("topic-ServerStatistics-queue", "topic-ServerStatistics-exchange", "ServerStatistics.*");
+            _channel.QueueBind(_config.Queue, _config.Exchange, _config.RoutingKey);
 
-            var alertCalculation = new AlertCalculations(configThreshold, serverAlertService);
+            var consumer = new EventingBasicConsumer(_channel);
 
-            var consumer = new EventingBasicConsumer(channel);
             consumer.Received += async (sender, e) =>
             {
                 var body = e.Body.ToArray();
@@ -39,10 +50,11 @@ namespace ServerStatisticsConsumer
                     CpuUsage = serverStatDto.CpuUsage,
                     Timestamp = serverStatDto.Timestamp
                 };
-                await alertCalculation.SendAlert(serverStatDto);
-                await mongoDB.Insert(serverStat);
+
+                await _alertCalculation.SendAlert(serverStatDto);
+                await _mongoDB.Insert(serverStat);
             };
-            channel.BasicConsume("topic-ServerStatistics-queue", true, consumer);
+            _channel.BasicConsume(_config.Queue, true, consumer);
             Console.WriteLine("Consumer Started");
             Console.ReadLine();
         }

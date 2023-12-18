@@ -2,10 +2,10 @@
 
 namespace SignalRService
 {
-    public class ServerAlertService : IServerAlertService
+    public class ServerAlertSenderService : IServerAlertSenderService
     {
         private readonly HubConnection _hubConnection;
-        public ServerAlertService(string url)
+        public ServerAlertSenderService(string url)
         {
             _hubConnection = new HubConnectionBuilder()
                 .WithUrl(url)
